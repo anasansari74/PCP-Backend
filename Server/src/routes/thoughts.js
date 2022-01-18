@@ -1,26 +1,25 @@
+// // With MONGOOSE
+
 const express = require("express");
+const router = express.Router();
 
-const thoughtsRouter = express.Router();
+// Load Thought model
+const Thought = require("../models/thought");
 
-const dbo = require("../../database/conn");
+// @route GET api/thoughts/test
+// @description tests thoughts route
+// @access Public
+router.get("/thoughts/test", (req, res) => res.send("book route testing!"));
 
-const ObjectId = require("mongodb").ObjectId;
-
-thoughtsRouter.route("/thoughts").get(async function (req, res) {
-  let db_connect = dbo.getDb("positive-thought-generator");
-  await db_connect.collection("thoughts").find({}).toArray();
+// @route GET api/thoughts/:id
+// @description Get single thoughts by id
+// @access Public
+router.get("/thoughts/:id", (req, res) => {
+  Thought.find({ _id: ObjectId(`61e14ed32de84352ec5ca8f4`) })
+    .then(thought => res.json(thought))
+    .catch(err =>
+      res.status(404).json({ noThoughtsFound: "No Thought found" })
+    );
 });
 
-thoughtsRouter.route("/thoughts/:id").get(async function (req, res) {
-  let db_connect = dbo.getDb("positive-thought-generator");
-  let myquery = { _id: ObjectId(`${req.params.id}`)};
-  await db_connect
-    .collection("positiveThoughtGenerator.positiveThoughts")
-    .find(myquery)
-    .toArray(function (err, result) {
-      if (err) throw err;
-      res.json(result);
-    });
-});
-
-module.exports = thoughtsRouter;
+module.exports = router;
