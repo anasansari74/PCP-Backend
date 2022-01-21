@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const ThoughtSchema = new mongoose.Schema({
   thought_id: {
     type: Number,
-    $inc: 1,
   },
   thought: {
     type: String,
@@ -11,3 +10,4 @@ const ThoughtSchema = new mongoose.Schema({
 });
 
 module.exports = Thought = mongoose.model("thought", ThoughtSchema);
+;
