@@ -1,8 +1,13 @@
 const mongoose = require("mongoose");
 
-const thoughtSchema = new mongoose.Schema({
-  id: Number,
-  thought: String,
+const ThoughtSchema = new mongoose.Schema({
+  thought_id: {
+    type: Number,
+    $inc: 1,
+  },
+  thought: {
+    type: String,
+  },
 });
 
-module.exports = thought = mongoose.model("thought", thoughtSchema);
+module.exports = Thought = mongoose.model("thought", ThoughtSchema);
