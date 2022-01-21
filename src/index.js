@@ -6,9 +6,10 @@ const morgan = require("morgan");
 
 const app = express();
 
-app.use(require("./routes/thoughts"));
 // get driver connection
 const dbo = require("../database/conn");
+
+const thoughtsRouter = require("./routes/thoughts");
 
 /* SETUP MIDDLEWARE */
 
@@ -24,6 +25,8 @@ app.use(morgan("dev"));
 dbo();
 
 /* SETUP ROUTES */
+
+app.use("/thoughts", thoughtsRouter);
 
 app.get("*", (req, res) => {
   res.json({ ok: true });
