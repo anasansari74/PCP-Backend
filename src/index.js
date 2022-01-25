@@ -1,4 +1,5 @@
 require("dotenv").config();
+const mongoose = require("mongoose");
 
 const express = require("express");
 const cors = require("cors");
@@ -6,10 +7,8 @@ const morgan = require("morgan");
 
 const app = express();
 
-// get driver connection
-const dbo = require("../database/conn");
-
-const thoughtsRouter = require("./routes/thoughts");
+// const thoughtsRouter = require("./routes/thoughts");
+const thoughtsRouter = require("./resources/thought/router")
 
 /* SETUP MIDDLEWARE */
 
@@ -21,8 +20,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
 // Connect Database
+mongoose
+  .connect(process.env.ATLAS_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then((res) => console.log(`Connection Succesful ${res}`))
+  .catch((err) => console.log(`Error in DB connection ${err}`));
 
-dbo();
 
 /* SETUP ROUTES */
 
@@ -37,19 +42,5 @@ app.get("*", (req, res) => {
 const port = process.env.PORT || 3030;
 
 app.listen(port, () => {
-  // Connect to the MongoDB cluster
-  // mongoose.connect(
-  //   process.env.ATLAS_URI,
-  //   {
-  //     useNewUrlParser: true,
-
-  //     useUnifiedTopology: true,
-  //   },
-  //   err => {
-  //     if (err) throw err;
-  //     console.log("Connected to MongoDB!!!");
-  //   }
-  // );
-
   console.log(`\n🚀 Server is running on http://localhost:${port}/\n`);
 });
