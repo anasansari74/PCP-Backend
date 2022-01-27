@@ -23,7 +23,7 @@ const getAllThoughts = async (req, res) => {
   }
 };
 
-// GET /thoughts/:id ✔
+// GET /thoughts/thoughtId/:id ✔
 // description: Get single thoughts by ObjectId
 const getThoughtById = async (req, res) => {
   const id = req.params.id;
@@ -45,7 +45,7 @@ const addOneThought = async (req, res) => {
 
   try {
     const addThought = await Thought.create(thought);
-    if (addThought) res.json({ addThought });
+    if (addThought) res.json({ msg: `Added thought successfully ` });
     if (!addThought) res.json({ msg: "Thought not found" });
   } catch (e) {
     console.log(e);
@@ -68,10 +68,22 @@ const getRandomThought = async (req, res) => {
   }
 };
 
+const deleteAllThoughts = async (req, res) => {
+  try {
+    const deleteThoughts = await Thought.remove({});
+    if (deleteThoughts) res.json({ msg: "All thoughts deleted" });
+    if (!deleteThoughts) res.json({ msg: "Thought not found" });
+  } catch (e) {
+    console.log(e);
+    res.json(e.message);
+  }
+};
+
 module.exports = {
   testingRoute,
   getAllThoughts,
   getThoughtById,
   addOneThought,
   getRandomThought,
+  deleteAllThoughts,
 };
