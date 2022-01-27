@@ -3,38 +3,69 @@ const Thought = require("../../models/thought");
 //GET /thoughts/test ✔
 //description: tests thoughts route
 const testingRoute = async (req, res) => {
-  await res.send("Thought route testing!");
+  try {
+    await res.send("Thought route testing!");
+  } catch (error) {
+    res.json({ error: error.message });
+  }
 };
 
 //GET /thoughts ✔
 //description: Get all thoughts
 const getAllThoughts = async (req, res) => {
-  const allThoughts = await Thought.find();
-  res.json({ allThoughts });
+  try {
+    const allThoughts = await Thought.find();
+    if (allThoughts) res.json({ allThoughts });
+    if (!allThoughts) res.json({ msg: "Thought not found" });
+  } catch (e) {
+    console.log(e);
+    res.json(e.message);
+  }
 };
 
 // GET /thoughts/:id ✔
 // description: Get single thoughts by ObjectId
 const getThoughtById = async (req, res) => {
   const id = req.params.id;
-  const thoughtById = await Thought.findById(id);
-  res.json({ thoughtById });
+
+  try {
+    const thoughtById = await Thought.findById(id);
+    if (thoughtById) res.json({ thoughtById });
+    if (!thoughtById) res.json({ msg: "Thought not found" });
+  } catch (e) {
+    console.log(e);
+    res.json(e.message);
+  }
 };
 
 // POST /thoughts ✔
 // description: add/save thought
 const addOneThought = async (req, res) => {
   const thought = req.body;
-  const addThought = await Thought.create(thought);
-  res.json({ addThought });
+
+  try {
+    const addThought = await Thought.create(thought);
+    if (addThought) res.json({ addThought });
+    if (!addThought) res.json({ msg: "Thought not found" });
+  } catch (e) {
+    console.log(e);
+    res.json(e.message);
+  }
 };
 // //GET /thoughts/random ✔
 // //description: gets a random thought from the database
 const getRandomThought = async (req, res) => {
   const count = await Thought.count();
   const rand = Math.floor(Math.random() * count);
-  const randomDoc = await Thought.findOne().skip(rand);
-  res.json({ randomDoc });
+
+  try {
+    const randomThought = await Thought.findOne().skip(rand);
+    if (randomThought) res.json({ randomThought });
+    if (!randomThought) res.json({ msg: "Thought not found" });
+  } catch (e) {
+    console.log(e);
+    res.json(e.message);
+  }
 };
 
 module.exports = {
