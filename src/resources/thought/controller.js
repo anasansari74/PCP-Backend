@@ -28,27 +28,13 @@ const addOneThought = async (req, res) => {
   const addThought = await Thought.create(thought);
   res.json({ addThought });
 };
-
-//GET /thoughts/random ✔
-//description: gets a random thought from the database
-const getRandomThought = (req, res) => {
-  Thought.count().exec(function (err, count) {
-    var random = Math.floor(Math.random() * count);
-
-    Thought.findOne()
-      .skip(random)
-      .then((thought) => res.json(thought))
-      .catch((err) =>
-        res.status(400).json({
-          error: `Unable to get thought`,
-        })
-      );
-  });
-
-  //   const count = await this.count();
-  //   const rand = Math.floor(Math.random() * count);
-  //   const randomDoc = await this.findOne().skip(rand);
-  //     res.json({randomDoc});
+// //GET /thoughts/random ✔
+// //description: gets a random thought from the database
+const getRandomThought = async (req, res) => {
+  const count = await Thought.count();
+  const rand = Math.floor(Math.random() * count);
+  const randomDoc = await Thought.findOne().skip(rand);
+  res.json({ randomDoc });
 };
 
 module.exports = {
