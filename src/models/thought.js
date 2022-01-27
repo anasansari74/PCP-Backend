@@ -1,8 +1,20 @@
 const mongoose = require("mongoose");
 
 const ThoughtSchema = new mongoose.Schema({
-  thought_id: {
-    type: Number,
+  categoryTitle: {
+    type: String,
+    enum: [
+      "health",
+      "uplifting",
+      "career",
+      "motivation",
+      "relationships",
+      "wholesome",
+      "relaxing",
+      "comedic",
+      "happiness",
+      "insightful",
+    ],
   },
   thought: {
     type: String,
@@ -10,4 +22,3 @@ const ThoughtSchema = new mongoose.Schema({
 });
 
 module.exports = Thought = mongoose.model("thought", ThoughtSchema);
-;
