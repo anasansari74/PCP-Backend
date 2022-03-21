@@ -7,7 +7,6 @@ const morgan = require("morgan");
 
 const app = express();
 
-// const thoughtsRouter = require("./routes/thoughts");
 const thoughtsRouter = require("./resources/thought/router");
 const catergoriesRouter = require("./resources/category/router");
 
