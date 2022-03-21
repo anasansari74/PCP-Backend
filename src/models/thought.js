@@ -1,40 +1,26 @@
 const mongoose = require("mongoose");
-const axios = require('axios');
+// const axios = require("axios");
 
-let categories = []
+// let categories = [];
 
+// async function getTags() {
+//   try {
+//     const response = await axios.get(
+//       "https://goquotes-api.herokuapp.com/api/v1/all/tags"
+//     );
+//     if (response) {
+//       let categoryNames = response.data.tags;
 
-const getTags = () => {
-  try {
-    return axios.get('https://goquotes-api.herokuapp.com/api/v1/all/tags')
-    .then(response => {
-      if (response.data.tags) {
-        console.log(
-          `Got ${Object.entries(response.data.tags)} tags`
-        )
-      }
-    })
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-// .then(response => {
-//   if (response.data.message) {
-//     console.log(
-//       `Got ${Object.entries(response.data.message).length} breeds`
-//     )
+//       categories = categoryNames.map(a => a.name);
+//     }
+//   } catch (error) {
+//     console.error(error);
 //   }
-// })
+// }
 
+// getTags();
 
-
-
-getTags()
-
-console.log("categories", categories)
-
-
+// console.log("categories", categories);
 
 const ThoughtSchema = new mongoose.Schema({
   categoryTitle: {

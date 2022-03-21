@@ -1,4 +1,19 @@
+const { find } = require("../../models/thought");
 const Thought = require("../../models/thought");
+
+// GET /categories/allcategories
+// description: get all the categories in the database
+const allCategories = async (req, res) => {
+  try {
+    const allCategories = await Thought.find();
+
+    if (allCategories) res.json({ allCategories });
+    if (!allCategories) res.json({ msg: "Categories not found" });
+  } catch (e) {
+    console.log(e);
+    res.json(e.message);
+  }
+};
 
 // GET /categories/allThoughts/:category ✔
 // description: filter thoughts from a specified category
@@ -39,4 +54,4 @@ const randomThought = async (req, res) => {
   }
 };
 
-module.exports = { allThoughts, randomThought };
+module.exports = { allThoughts, randomThought, allCategories };

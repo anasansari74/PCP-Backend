@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const { allThoughts, randomThought } = require("./controller");
+const { allThoughts, randomThought, allCategories } = require("./controller");
+
+router.get("/categories", allCategories);
 
 router.get("/allThoughts/:category", allThoughts);
 
