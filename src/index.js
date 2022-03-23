@@ -7,6 +7,7 @@ const morgan = require("morgan");
 
 const app = express();
 
+const usersRouter = require("./resources/user/router");
 const thoughtsRouter = require("./resources/thought/router");
 const catergoriesRouter = require("./resources/category/router");
 
@@ -25,11 +26,11 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(res => console.log(`Connection Succesful`))
-  .catch(err => console.log(`Error in DB connection ${err}`));
+  .then((res) => console.log(`Connection Succesful`))
+  .catch((err) => console.log(`Error in DB connection ${err}`));
 
 /* SETUP ROUTES */
-
+app.use("/login", usersRouter);
 app.use("/thoughts", thoughtsRouter);
 app.use("/categories", catergoriesRouter);
 
