@@ -14,7 +14,6 @@ const catergoriesRouter = require("./resources/category/router");
 
 app.disable("x-powered-by");
 
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
