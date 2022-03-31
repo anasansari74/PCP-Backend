@@ -15,10 +15,17 @@ const catergoriesRouter = require("./resources/category/router");
 
 app.disable("x-powered-by");
 
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
+
+// Enables the OPTIONS request check in our API
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  })
+);
 
 // Connect Database
 mongoose
