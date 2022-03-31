@@ -21,7 +21,7 @@ app.use(morgan("dev"));
 // Enables the OPTIONS request check in our API
 app.use(
   cors({
-    origin: "no-cors",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   })
 );
