@@ -5,8 +5,13 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 
+let cookieParser = require("cookie-parser");
+
+const salt = 10;
+
 const app = express();
 
+const usersRouter = require("./resources/user/router");
 const thoughtsRouter = require("./resources/thought/router");
 const catergoriesRouter = require("./resources/category/router");
 
@@ -14,9 +19,19 @@ const catergoriesRouter = require("./resources/category/router");
 
 app.disable("x-powered-by");
 
+app.get('/',(req,res)=>{
+  const {token}=req.cookies;
+  if(verifyToken(token)){
+      return res.render('/');
+  }else{
+      res.redirect('/login')
+  }
+})
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
+app.use(cookieParser());
 
 // Enables the OPTIONS request check in our API
 app.use(
@@ -32,11 +47,13 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(res => console.log(`Connection Succesful`))
-  .catch(err => console.log(`Error in DB connection ${err}`));
+  .then((res) => console.log(`Connection Succesful`))
+  .catch((err) => console.log(`Error in DB connection ${err}`));
+
+
 
 /* SETUP ROUTES */
-
+app.use("/user", usersRouter);
 app.use("/thoughts", thoughtsRouter);
 app.use("/categories", catergoriesRouter);
 
