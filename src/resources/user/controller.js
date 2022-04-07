@@ -1,44 +1,42 @@
-const Users = require("../../models/user");
-const bcrypt = require("bcrypt")
-// import compare from bcrypt
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = process.env.jwt;
 
-async function validateUser (req, res) {
-
-try {
-    // Get user input
-    const { username, password } = req.body;
-
-    const user = await Users.findOne({ username });
-
-    if (user && (await bcrypt.compare(password, user.password))) {
-      // Create token
-      const token = jwt.sign(
-        { user_id: user._id, username },
-        process.env.TOKEN_KEY,
-        {
-          expiresIn: "2h",
-        }
+const verifyUserLogin = async (username, password) => {
+  try {
+    const user = await User.findOne({ username }).lean();
+    if (!user) {
+      return { status: "error", error: "user not found" };
+    }
+    if (await bcrypt.compare(password, user.password)) {
+      // creating a JWT token
+      token = jwt.sign(
+        { id: user._id, username: user.username, type: "user" },
+        JWT_SECRET,
+        { expiresIn: "2h" }
       );
-
-      // save user token
-      user.token = token;
-
-      // user
-      res.status(200).json(user);
+      return { status: "ok", data: token };
     }
-    
-
-    // Validate user input
-    if (!(username && password)) {
-      res.status(400).send("All input is required");
-    }
-    // Validate if user exist in our database
-    res.status(400).send("Invalid Credentials");
-  } catch (err) {
-    console.log(err);
+    return { status: "error", error: "invalid password" };
+  } catch (error) {
+    console.log(error);
+    return { status: "error", error: "timed out" };
   }
-}
+};
 
-module.exports = validateUser;
- 
+// login
+const login = async (req, res) => {
+  const { username, password } = req.body;
+  // we made a function to verify our user login
+  const response = await verifyUserLogin(username, password);
+  if (response.status === "ok") {
+    console.log("You are loggedin");
+    // storing our JWT web token as a cookie in our browser
+    res.cookie("token", token, { maxAge: 2 * 60 * 60 * 1000, httpOnly: true }); // maxAge: 2 hours
+    res.redirect("/");
+  } else {
+    res.json(response);
+  }
+};
 
+module.exports = login;
