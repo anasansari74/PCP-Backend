@@ -7,7 +7,7 @@ const verifyUserLogin = async (username, password) => {
   try {
     const user = await User.findOne({ username }).lean();
     if (!user) {
-      return { status: "error", error: "user not found" };
+      return { status: "error", error: "Username/password is incorrect" };
     }
     if (await bcrypt.compare(password, user.password)) {
       // creating a JWT token
@@ -18,7 +18,7 @@ const verifyUserLogin = async (username, password) => {
       );
       return { status: "ok", data: token };
     }
-    return { status: "error", error: "invalid password" };
+    return { status: "error", error: "Username/password is incorrect" };
   } catch (error) {
     console.log(error);
     return { status: "error", error: "timed out" };
@@ -33,7 +33,12 @@ const login = async (req, res) => {
   if (response.status === "ok") {
     console.log("You are loggedin");
     // storing our JWT web token as a cookie in our browser
-    res.cookie("token", token, { httpOnly: true }); // maxAge: 2 hours
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+    // .send();
   } else {
     res.json(response);
   }
