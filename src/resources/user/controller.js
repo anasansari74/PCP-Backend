@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.jwt;
+const User = require("../../models/user");
 
 const verifyUserLogin = async (username, password) => {
   try {
@@ -32,11 +33,33 @@ const login = async (req, res) => {
   if (response.status === "ok") {
     console.log("You are loggedin");
     // storing our JWT web token as a cookie in our browser
-    res.cookie("token", token, { maxAge: 2 * 60 * 60 * 1000, httpOnly: true }); // maxAge: 2 hours
-    res.redirect("/");
+    res.cookie("token", token, { httpOnly: true }); // maxAge: 2 hours
   } else {
     res.json(response);
   }
 };
 
-module.exports = login;
+const signup = async (req, res) => {
+  // geting our data from frontend
+  const { username, password: plainTextPassword } = req.body;
+  // encrypting our password to store in database
+  const password = await bcrypt.hash(plainTextPassword, 8);
+  try {
+    // storing our user data into database
+    const response = await User.create({
+      username,
+      password,
+    });
+    if (response) res.json({ msg: "You have succesfully signed up!" });
+
+    return res.redirect("/");
+  } catch (error) {
+    console.log(JSON.stringify(error));
+    if (error.code === 11000) {
+      return res.send({ status: "error", error: "username already exists" });
+    }
+    throw error;
+  }
+};
+
+module.exports = { login, signup };
